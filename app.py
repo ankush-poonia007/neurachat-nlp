@@ -5,6 +5,10 @@ from flask_cors import CORS
 from flask import session
 import os
 
+# Environment Variable load
+from dotenv import load_dotenv
+load_dotenv()
+
 # Core Engine Imports
 from backend.chat import create_chat_room, get_user_chats, get_messages, save_message, delete_chat, rename_chat
 from backend.chatbot_engine.engine import brain
@@ -12,11 +16,6 @@ from backend.database import init_db
 from backend.auth import register_user, login_user
 from backend.profile import get_profile, update_profile
 from backend.membership import check_limit, increment_message_count
-
-# Environment Variable load 
-from dotenv import load_dotenv
-import os
-load_dotenv()
 
 
 app = Flask(__name__, static_folder='frontend/static', static_url_path='/static')
@@ -225,4 +224,3 @@ def rename_chat_route( chat_id ):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-

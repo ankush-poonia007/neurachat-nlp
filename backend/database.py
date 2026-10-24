@@ -9,7 +9,10 @@ import os
 import uuid
 
 BASE_DIR = os.path.dirname( os.path.dirname( os.path.abspath( __file__ ) ) )
-DB_PATH = os.path.join( BASE_DIR, 'database', 'neurachat.db' )
+DB_PATH = os.environ.get(
+    'DATABASE_PATH',
+    os.path.join( BASE_DIR, 'database', 'neurachat.db' )
+)
 SCHEMA_PATH = os.path.join( BASE_DIR, 'database', 'schema.sql' )
 
 
@@ -18,6 +21,9 @@ SCHEMA_PATH = os.path.join( BASE_DIR, 'database', 'schema.sql' )
 # ===========================================================================
 
 def init_db():
+    db_dir = os.path.dirname( DB_PATH )
+    if db_dir:
+        os.makedirs( db_dir, exist_ok=True )
     conn = sqlite3.connect( DB_PATH )
     with open( SCHEMA_PATH, 'r' , encoding= 'utf-8' ) as f:
         conn.executescript( f.read() )

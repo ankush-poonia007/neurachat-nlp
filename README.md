@@ -44,7 +44,7 @@
 
 NeuraChat AI is a **third-generation agentic chatbot** built from scratch with a modular Python backend, a normalized SQLite database, and a multi-page web frontend with a shared design system, dark/light themes, and a dedicated chat workspace.
 
-It goes beyond a simple API wrapper — it **reasons** about user intent and topic before a single token is sent to the LLM. A custom NLP routing layer detects intent (greeting, definition, follow-up, reset, exit) and topic (AI, ML, DL, Neural Networks), then builds a structured, context-enriched prompt for Gemini 2.5 Flash. The result is sharper, more relevant responses with genuine conversational memory.
+It goes beyond a simple API wrapper — it **reasons** about user intent and topic before a single token is sent to the LLM. A custom NLP routing layer detects intent (greeting, definition, follow-up, reset, exit) and topic (AI, ML, DL, Neural Networks), then builds a structured, context-enriched prompt for Gemini 3.6 Flash. The result is sharper, more relevant responses with genuine conversational memory.
 
 Users can register, log in, manage multiple independent chat sessions, view persistent history, update their profile, and are subject to a plan-based message limit system — all backed by a production-quality relational schema.
 
@@ -99,7 +99,7 @@ Engine Brain      →  routing logic, depth resolution, topic switching
 Agent             →  structured prompt + full conversation history injected
     │
     ▼
-Gemini 2.5 Flash  →  generates response
+Gemini 3.6 Flash  →  generates response
     │
     ▼
 SQLite            →  both messages saved with role + timestamp
@@ -221,7 +221,7 @@ AI-Chatbot-Agentic-AI-NLP/
 | Feature | Description |
 |---|---|
 | Custom NLP routing | Intent + topic detection before every LLM call |
-| Gemini 2.5 Flash | Structured prompts with full conversation history |
+| Gemini 3.6 Flash | Structured prompts with full conversation history |
 | User auth | Registration, login, scrypt-hashed passwords, Flask sessions |
 | Multi-session chat | Create, rename, and soft-delete independent chat rooms |
 | Persistent history | All messages stored in SQLite with roles and timestamps |
@@ -325,7 +325,7 @@ Dark mode is the default. Light mode is toggled via `theme.js` using `data-theme
 | Flask-CORS | Cross-origin support for API routes |
 | SQLite | Relational database |
 | Werkzeug | Password hashing (scrypt) |
-| google-genai | Gemini 2.5 Flash SDK |
+| google-genai | Gemini 3.6 Flash SDK |
 | python-dotenv | Environment variable management |
 
 ### Frontend
@@ -478,6 +478,18 @@ EMAILJS_PUBLIC_KEY=your_public_key
 ```
 
 > ⚠️ Never commit your `.env` file. It is listed in `.gitignore`.
+
+### Deploying on Render Free
+
+The `render.yaml` blueprint configures a free Render web service. Flask serves the HTML, CSS, JavaScript, and API from the same app, so you do **not** need separate frontend hosting.
+
+1. In the Render Dashboard, choose **New > Blueprint** and connect this GitHub repository.
+2. Select the `main` branch and apply the blueprint. Render will prompt you for `GEMINI_API_KEY` and `FLASK_SECRET_KEY`; set both values there.
+3. Deploy the service. The blueprint sets `DATABASE_PATH=/tmp/neurachat.db`, and the app creates the database from `database/schema.sql` when it starts.
+
+**Free-tier SQLite limitation:** Render Free web services have an ephemeral filesystem and cannot use persistent disks. The SQLite database (including user accounts and chat history) can be erased whenever the service spins down after 15 minutes without traffic, restarts, or redeploys. After being idle, the service may take about a minute to wake. This setup is suitable for demos and testing, not for retaining real user data; do not store data here that you cannot afford to lose.
+
+The `DATABASE_PATH` environment variable is optional for local development; by default, the app uses `database/neurachat.db`. On Render Free it points to `/tmp/neurachat.db`, which is writable but temporary. To retain data on Render, you would need a paid web service with a persistent disk mounted at `/var/data` and `DATABASE_PATH=/var/data/neurachat.db`, or use a separately hosted database.
 
 ### API Reference
 
