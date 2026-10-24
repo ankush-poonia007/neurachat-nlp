@@ -504,7 +504,7 @@ EMAILJS_PUBLIC_KEY=your_public_key
 | Branch | Status | Purpose |
 |---|---|---|
 | `main` | ✅ Stable | Complete V3 rebuild — deployed |
-| `fixes/ui-and-session` | 🔧 In progress | Session persistence + UI audit + doc styling |
+| `fixes/ui-and-session` | ✅ Done | Session persistence + UI audit + doc styling |
 
 ---
 
