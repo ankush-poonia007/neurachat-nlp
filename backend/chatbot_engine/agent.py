@@ -36,7 +36,7 @@ def ask_agent( message , intent , topic , depth , history =[] ):
     )
 
     response = client.models.generate_content(
-        model = "gemini-2.5-flash",
+        model = "gemini-3.6-flash",
         config = { "system_instruction": system_prompt },
         contents = contents
     )

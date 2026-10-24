@@ -25,7 +25,7 @@ app = Flask(__name__, static_folder='frontend/static', static_url_path='/static'
 init_db()
 
 # Secret Key
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = 86400
